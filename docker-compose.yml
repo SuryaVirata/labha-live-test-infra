@@ -1,0 +1,54 @@
+# Standalone test infrastructure — lives OUTSIDE all 4 labha repos on purpose.
+#
+# This file does not touch, replace, or depend on any repo's own
+# docker-compose.yml (labha-backend-go, labha-dashboard, etc). It exists so
+# "hit a real database" / "hit a real browser" testing has its own isolated
+# infra that can be started and thrown away without ever touching app repos.
+#
+# All ports are offset from the app repos' own defaults (5432/6379) so this
+# can run *at the same time* as labha-backend-go's own docker-compose.yml
+# without a port clash.
+#
+# Usage:
+#   docker compose up -d              # start real Postgres + Redis + a real browser
+#   docker compose down                # stop (add -v to also wipe data volumes)
+#
+# Real browser, no mocking: the "browser" service below is Selenium running an
+# actual Chromium binary in the container — not a stub, not a headless fake.
+# Point any real WebDriver/Playwright/Selenium client at
+# http://localhost:4444/wd/hub to drive it, or open http://localhost:7900
+# (password: "secret") in your own browser to *watch* it click through the
+# real running dashboard/backend live, in real time.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: testpass
+      POSTGRES_DB: testdb
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U testuser -d testdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
+
+  # A real, downloadable Chromium browser running inside the container —
+  # driven over the standard WebDriver protocol. Nothing here is mocked or
+  # faked; it is the same browser engine a real user's Chrome is built on.
+  browser:
+    image: selenium/standalone-chromium:latest
+    shm_size: "2gb"
+    ports:
+      - "4444:4444" # WebDriver endpoint (Selenium/Playwright/any WebDriver client)
+      - "7900:7900" # noVNC — open in your own browser to watch it live
+    environment:
+      SE_VNC_NO_PASSWORD: "0"
+      SE_VNC_PASSWORD: "secret"

@@ -1,0 +1,268 @@
+[
+  {
+    "step": "preflight",
+    "description": "root starts unenrolled",
+    "api": [
+      {
+        "url": "/auth/mfa/status",
+        "method": "GET",
+        "status": 200,
+        "body": "{\"enrolled\":false,\"grace_expires_at\":\"2026-10-16T04:48:34.220359Z\",\"remaining_recovery_codes\":0,\"required\":true}"
+      }
+    ]
+  },
+  {
+    "step": 1,
+    "description": "Login page loaded (root unenrolled; no MFA prompt expected)",
+    "screenshot": "01-login-page.png",
+    "api": []
+  },
+  {
+    "step": 2,
+    "description": "Admin credentials entered",
+    "screenshot": "02-admin-credentials.png",
+    "api": []
+  },
+  {
+    "step": 3,
+    "description": "Console after password login (AAL-1, no prompt yet — root unenrolled)",
+    "screenshot": "03-console-aal1.png",
+    "api": [
+      {
+        "body": "{\"access_token\":\"eyJhbGciOiJSUzI1NiIsImtpZCI6ImxhYmhhLXJzYS0wMSIsInR5cCI6IkpXVCJ9.eyJhYWwiOjEsImF1ZCI6Imh0dHBzOi8vYXBpLmxhYmhhLmlvIiwiZGV2aWNlX2lkIjoiMzgzZTlmNTUtMGFkZS00ODdhLTlhMDUtZTU2YTJjYjYzYTI1IiwiZXhwIjoxNzkxNTIyNTM4LCJpYXQiOjE3OTE1MjE2MzgsImlzcyI6Imh0dHBzOi8vYXV0aC5sYWJoYS5pbyIsImp0aSI6ImVjOGI1MTA3LTEyZjYtNDc5OC04Yzc1LWI3ZmJlODFhNWYyMCIsIm1lcmNoYW50X2lkIjoiMjAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMDEwIiwicHJpbmNpcGFsX3R5cGUiOiJ1c2VyIiwicm9sZSI6IlJPT1RfQURNSU4iLCJzdG9yZV9zY29wZXMiOltdLCJzdWIiOiIyMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwMDEifQ.wp1AHvTlFm9g-P13AXQS-m1B5jSNi2yV3yE5c1CpAFAhsiipWK_rkQMBxVSxYjDEujP4erETP3E1wUDE-ln9fGzBS5NmHtX2fjGiW3JgtW5eNT5LECsmCZ94M5C9bhRSgjvaQ8L_Xn9NprXA8sqEppSUiS-ES5Kf3XSZlluJ88Xfbo6mnYETByeTtgb4odK9wrSSc0UCnLa2mX489Vum3HkqYvZ9lLPucBbhUaYRbJEXLWYbenNkHkrQBo1CyzTXR4mIFLV6ZBqJMm0apIWYlGYHipfyXhnO3VtFrlC4u9-sR51CkWn5-0qnoOLoGtPXksg4cOaBrjYbb6r07fo4MLKdSfdkAJrmVg_5XAMJICXi_g_oO3ZOWunPctrJ6BUgPenJe3WKSlhC6il1GnS1Jrkgw8IYaZz83SyGxdMaWUX29VWCkhUHEu8TjY75jctAEoO2UhzCDTIzS9nGLxvM2LRpPhH5PFB-3M5mCHRcKN6ejNrdEPtv06feWR-PiIkF_73TYIDtvi2zeapJJFbV_wxA8rQ9UyMrK44MSM3RnDsSWcrMN17RqdalSXMD8Ak23A6gLufXzufG54AJihxZH5kIbGollDWC74sLlxHM5MTbXW73vzbt36kQ9Gfc_nJkj9ResV5PW8ggNoOv5nOWYYNTs-xqTpw7xURAyr2f7Bo\",\"refresh_token\":\"VydXRtSmQLKbn3kfJcgouNx-jYmQNO0f4D8PfqpNZDs\",\"expires_in\":899,\"token_type\":\"Bearer\"}",
+        "method": "POST",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/login"
+      },
+      {
+        "body": "{\"user_id\":\"20000000-0000-4000-8000-000000000001\",\"email\":\"root@labha.dev\",\"is_active\":true,\"is_email_verified\":true,\"is_phone_verified\":false,\"role_code\":\"ROOT_ADMIN\",\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"assurance_level\":1,\"session_jti\":\"ec8b5107-12f6-4798-8c75-b7fbe81a5f20\",\"device_id\":\"383e9f55-0ade-487a-9a05-e56a2cb63a25\",\"stores_count\":5,\"has_products\":true,\"has_inventory\":false,\"onboarding_percent\":40,\"onboarding_phase\":\"PLAN\",\"onboarding_next\":\"store.subdomain\"}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/me"
+      },
+      {
+        "body": "{\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"permissions\":[\"storefront.publish\",\"payment.create\",\"revenue.view\",\"ledger.view\",\"order.view\",\"order.fulfill\",\"charge.platform.manage\",\"discount.manage\",\"media.upload\",\"charge.review\",\"analytics.export\",\"notification.template.manage\",\"customer.create\",\"audit.view\",\"infrastructure.deploy\",\"platform.admin\",\"merchant.update\",\"storefront.template.view\",\"storefront.manage\",\"product.view\",\"product.update\",\"merchant.suspend\",\"notification.view\",\"staff.revoke\",\"shipment.create\",\"settlement.view\",\"storefront.view\",\"platform.config\",\"store.publish\",\"merchant.view\",\"staff.invite\",\"log.view\",\"storefront.content.manage\",\"storefront.theme.manage\",\"subscription.manage\",\"product.delete\",\"order.cancel\",\"shipping.manage\",\"customer.update\",\"billing.manage\",\"product.create\",\"inventory.update\",\"charge.manage\",\"staff.manage\",\"integration.view\",\"storefront.template.publish\",\"settlement.approve\",\"payment.reconcile\",\"ledger.post\",\"operations.view\",\"storefront.content.view\",\"merchant.delete\",\"report.finance.export\",\"audit.export\",\"monitoring.view\",\"notification.send\",\"charge.view\",\"payment.view\",\"billing.view\",\"customer.view\",\"media.view\",\"analytics.view\",\"storefront.navigation.manage\",\"merchant.create\",\"inventory.view\",\"store.view\",\"store.manage\",\"trace.view\",\"media.delete\",\"payment.refund\",\"operations.manage\",\"integration.manage\",\"storefront.template.manage\"],\"user_id\":\"20000000-0000-4000-8000-000000000001\"}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/rbac/me/permissions"
+      },
+      {
+        "body": "{\"enrolled\":false,\"grace_expires_at\":\"2026-10-16T04:48:34.220359Z\",\"remaining_recovery_codes\":0,\"required\":true}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/mfa/status"
+      },
+      {
+        "body": "{\"success\":true,\"data\":[],\"meta\":{\"page\":1,\"page_size\":8,\"total\":0,\"total_pages\":0}}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/notifications?page=1&page_size=8"
+      },
+      {
+        "body": "{\"success\":true,\"data\":null}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/charges/review-queue"
+      },
+      {
+        "body": "{\"success\":true,\"data\":[{\"id\":\"30000000-0000-4000-8000-000000000010\",\"owner_user_id\":\"30000000-0000-4000-8000-000000000001\",\"legal_name\":\"LABHA Super Admin Merchant\",\"kyc_status\":\"ACTIVE\",\"business_type\":\"private_limited\",\"primary_language\":\"en\",\"onboarding_step\":0,\"version\":0,\"created_at\":\"2026-10-08T20:00:28Z\",\"updated_at\":\"2026-10-08T20:00:28Z\",\"email\":\"admin@labha.dev\",\"phone\":\"+919999999999\"},{\"id\":\"20000000-0000-4000-8000-000000000010\",\"owner_user_id\":\"20000000-0000-4000-8000-000000000101\",\"legal_name\":\"LABHA Dev Merchant\",\"kyc_status\":\"ACTIVE\",\"business_type\":\"private_limited\",\"primary_language\":\"en\",\"onboarding_step\":0,\"version\":0,\"created_at\":\"2026-10-08T20:00:24Z\",\"updated_at\":\"2026-10-08T20:00:28Z\",\"email\":\"owner@labha.dev\"},{\"id\":\"a0000000-0000-4000-8000-000000000001\",\"legal_name\":\"LABHA Platform\",\"kyc_status\":\"ACTIVE\",\"business_type\":\"PLATFORM\",\"primary_language\":\"en\",\"onboarding_step\":0,\"version\":0,\"created_at\":\"2026-10-08T19:59:56Z\",\"updated_at\":\"2026-10-08T19:59:56Z\"}],\"meta\":{\"page\":1,\"page_size\":20,\"total\":3,\"total_pages\":1}}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/merchants?page=1&page_size=20"
+      }
+    ]
+  },
+  {
+    "step": 4,
+    "description": "Profile page with Two-factor authentication card (Off)",
+    "screenshot": "04-profile-mfa-off.png",
+    "api": [
+      {
+        "body": "{\"enrolled\":false,\"grace_expires_at\":\"2026-10-16T04:48:34.220359Z\",\"remaining_recovery_codes\":0,\"required\":true}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/mfa/status"
+      },
+      {
+        "body": "{\"sessions\":[{\"jti\":\"ec8b5107-12f6-4798-8c75-b7fbe81a5f20\",\"device_id\":\"383e9f55-0ade-487a-9a05-e56a2cb63a25\",\"ip_address\":\"172.18.0.1/32\",\"last_seen_at\":\"2026-10-09T04:53:58Z\",\"created_at\":\"2026-10-09T04:53:58Z\",\"current\":true},{\"jti\":\"7581f0a5-aef7-4c41-be15-d427b9c5fb16\",\"device_id\":\"journey-admin-pre-1791521630539\",\"ip_address\":\"172.18.0.1/32\",\"last_seen_at\":\"2026-10-09T04:53:50Z\",\"created_at\":\"2026-10-09T04:53:50Z\",\"current\":false},{\"jti\":\"59bbf8ce-9207-49a3-9de8-4d88ecbf6463\",\"device_id\":\"f96fa527-f2ba-4382-9a1a-c7d7d34d17c1\",\"ip_address\":\"172.18.0.1/32\",\"last_seen_at\":\"2026-10-09T04:48:30Z\",\"created_at\":\"2026-10-09T04:48:30Z\",\"current\":false},{\"jti\":\"29f4fe86-7bb2-449d-8913-d2b3f02f5b65\",\"device_id\":\"journey-admin-pre-1791521302213\",\"ip_address\":\"172.18.0.1/32\",\"last_seen_at\":\"2026-10-09T04:48:22Z\",\"created_at\":\"2026-10-09T04:48:22Z\",\"current\":false}]}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/sessions"
+      }
+    ]
+  },
+  {
+    "step": 5,
+    "description": "Enrollment started — QR / manual key visible",
+    "screenshot": "05-qr-manual-key.png",
+    "api": [
+      {
+        "body": "{\"sessions\":[{\"jti\":\"ec8b5107-12f6-4798-8c75-b7fbe81a5f20\",\"device_id\":\"383e9f55-0ade-487a-9a05-e56a2cb63a25\",\"ip_address\":\"172.18.0.1/32\",\"last_seen_at\":\"2026-10-09T04:53:58Z\",\"created_at\":\"2026-10-09T04:53:58Z\",\"current\":true},{\"jti\":\"7581f0a5-aef7-4c41-be15-d427b9c5fb16\",\"device_id\":\"journey-admin-pre-1791521630539\",\"ip_address\":\"172.18.0.1/32\",\"last_seen_at\":\"2026-10-09T04:53:50Z\",\"created_at\":\"2026-10-09T04:53:50Z\",\"current\":false},{\"jti\":\"59bbf8ce-9207-49a3-9de8-4d88ecbf6463\",\"device_id\":\"f96fa527-f2ba-4382-9a1a-c7d7d34d17c1\",\"ip_address\":\"172.18.0.1/32\",\"last_seen_at\":\"2026-10-09T04:48:30Z\",\"created_at\":\"2026-10-09T04:48:30Z\",\"current\":false},{\"jti\":\"29f4fe86-7bb2-449d-8913-d2b3f02f5b65\",\"device_id\":\"journey-admin-pre-1791521302213\",\"ip_address\":\"172.18.0.1/32\",\"last_seen_at\":\"2026-10-09T04:48:22Z\",\"created_at\":\"2026-10-09T04:48:22Z\",\"current\":false}]}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/sessions"
+      },
+      {
+        "body": "{\"grace_expires_at\":\"2026-10-16T04:48:34.220359Z\",\"manual_key\":\"ZXUGI6JCOT65SJQGSLEBH5HH5OGZ5GZR\",\"provisioning_uri\":\"otpauth://totp/LABHA:root@labha.dev?digits=6\\u0026issuer=LABHA\\u0026period=30\\u0026secret=ZXUGI6JCOT65SJQGSLEBH5HH5OGZ5GZR\"}",
+        "method": "POST",
+        "status": 201,
+        "url": "http://localhost:8080/api/v1/auth/mfa/enroll/start"
+      }
+    ]
+  },
+  {
+    "step": 5.1,
+    "description": "TOTP secret captured from enroll/start response",
+    "api": [
+      {
+        "body": "{\"grace_expires_at\":\"2026-10-16T04:48:34.220359Z\",\"manual_key\":\"ZXUGI6JCOT65SJQGSLEBH5HH5OGZ5GZR\",\"provisioning_uri\":\"otpauth://totp/LABHA:root@labha.dev?digits=6\\u0026issuer=LABHA\\u0026period=30\\u0026secret=ZXUGI6JCOT65SJQGSLEBH5HH5OGZ5GZR\"}",
+        "method": "POST",
+        "status": 201,
+        "url": "http://localhost:8080/api/v1/auth/mfa/enroll/start"
+      }
+    ]
+  },
+  {
+    "step": 6,
+    "description": "Authenticator code entered (step 59717389)",
+    "screenshot": "06-code-entered.png",
+    "api": []
+  },
+  {
+    "step": 7,
+    "description": "MFA enabled — recovery codes shown (10 single-use)",
+    "screenshot": "07-recovery-codes.png",
+    "api": [
+      {
+        "body": "{\"recovery_codes\":[\"R8ZP-YG4U\",\"WFUR-6JR7\",\"DTDZ-GHSH\",\"W38Y-AMS5\",\"9DMT-XQ4H\",\"4QKN-XNJ9\",\"WD37-RU5K\",\"2FFJ-VHDD\",\"RKGZ-WCCF\",\"Y5V7-9XR7\"],\"remaining\":10}",
+        "method": "POST",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/mfa/enroll/confirm"
+      },
+      {
+        "body": "{\"enrolled\":true,\"grace_expires_at\":null,\"remaining_recovery_codes\":10,\"required\":true}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/mfa/status"
+      }
+    ]
+  },
+  {
+    "step": 8,
+    "description": "Logged out — back on login page",
+    "screenshot": "08-after-logout.png",
+    "api": [
+      {
+        "body": "",
+        "method": "POST",
+        "status": 204,
+        "url": "http://localhost:8080/api/v1/auth/logout"
+      }
+    ]
+  },
+  {
+    "step": 9,
+    "description": "Second login — TOTP challenge gate shown (enrolled+required)",
+    "screenshot": "09-totp-gate.png",
+    "api": [
+      {
+        "body": "{\"access_token\":\"eyJhbGciOiJSUzI1NiIsImtpZCI6ImxhYmhhLXJzYS0wMSIsInR5cCI6IkpXVCJ9.eyJhYWwiOjEsImF1ZCI6Imh0dHBzOi8vYXBpLmxhYmhhLmlvIiwiZGV2aWNlX2lkIjoiMzgzZTlmNTUtMGFkZS00ODdhLTlhMDUtZTU2YTJjYjYzYTI1IiwiZXhwIjoxNzkxNTIyNTgwLCJpYXQiOjE3OTE1MjE2ODAsImlzcyI6Imh0dHBzOi8vYXV0aC5sYWJoYS5pbyIsImp0aSI6Ijk2OGFmY2FiLTY0OTYtNDhjMy04MWM4LTE2YjFiMjY3YjVjOSIsIm1lcmNoYW50X2lkIjoiMjAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMDEwIiwicHJpbmNpcGFsX3R5cGUiOiJ1c2VyIiwicm9sZSI6IlJPT1RfQURNSU4iLCJzdG9yZV9zY29wZXMiOltdLCJzdWIiOiIyMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwMDEifQ.u9vbGPdgKF14l-wE7n47StVfeemOXSmraxfZoDnTiZdNLFDsOCzZtJwpTwzCCVQX484yXShEui1WXPiMbe9ocRYQKClO5twY5W_OpkIhTbcfOmM8xdSNv3kK1KODADJa-j5oyhZBmUuBvSuDsdwGIq4xvq-yV4mu-HBQcVnt9d1LqLhXCmDjlMKb2TM_Zc-4ciq2XAesug739dbsIEeEr9aMVaAxxmpSufO6Y9cnHVCfRm9HmmT9ECSlIkevBm8vBWcoSoUmIsHXMOytTB6EPRmy0_DHv4oDEQvl5iiA0pJd1vwFRcEzGgq9X0KlQqUoVhsGnmp6Fx7eqP03BtZZqPk1SGlE9np7Adn74Sw4K6DoU7oGQSK0YrUM047KnkvS0CJqfjR9P_GjWBahUwWbdVp5Cu7uI78UB1sZvQS3Nv88AnnJs_IenL4GBGsWMPZc-Z2oJip2QRVnqc68UIoz7gzeMEGTKlmlnUyCzEQ8U2ZyNaHn5XqokbKHti4tv7uIKc1I06iyeFpc6dD0pVjfM9yzyPQtC6NS7Q4A0H5WHXPy_MKTbtQkzEc62THxJ4s2OJrLcdNSuxI-oMzbLE4Ama3vS_VL6b3kNeenFOBUTOhmGGKx989C39Lk45a_bQRfBIASbMsKGsrxV-MSdGxCYgJKsP4-7yEO8jBLOlb2PIQ\",\"refresh_token\":\"bzFv5JQh2UigANRzi-pzbnayw94ZoizPY2YG3VQaffE\",\"expires_in\":899,\"token_type\":\"Bearer\"}",
+        "method": "POST",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/login"
+      },
+      {
+        "body": "{\"user_id\":\"20000000-0000-4000-8000-000000000001\",\"email\":\"root@labha.dev\",\"is_active\":true,\"is_email_verified\":true,\"is_phone_verified\":false,\"role_code\":\"ROOT_ADMIN\",\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"assurance_level\":1,\"session_jti\":\"968afcab-6496-48c3-81c8-16b1b267b5c9\",\"device_id\":\"383e9f55-0ade-487a-9a05-e56a2cb63a25\",\"stores_count\":5,\"has_products\":true,\"has_inventory\":false,\"onboarding_percent\":40,\"onboarding_phase\":\"PLAN\",\"onboarding_next\":\"store.subdomain\"}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/me"
+      },
+      {
+        "body": "{\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"permissions\":[\"storefront.publish\",\"payment.create\",\"revenue.view\",\"ledger.view\",\"order.view\",\"order.fulfill\",\"charge.platform.manage\",\"discount.manage\",\"media.upload\",\"charge.review\",\"analytics.export\",\"notification.template.manage\",\"customer.create\",\"audit.view\",\"infrastructure.deploy\",\"platform.admin\",\"merchant.update\",\"storefront.template.view\",\"storefront.manage\",\"product.view\",\"product.update\",\"merchant.suspend\",\"notification.view\",\"staff.revoke\",\"shipment.create\",\"settlement.view\",\"storefront.view\",\"platform.config\",\"store.publish\",\"merchant.view\",\"staff.invite\",\"log.view\",\"storefront.content.manage\",\"storefront.theme.manage\",\"subscription.manage\",\"product.delete\",\"order.cancel\",\"shipping.manage\",\"customer.update\",\"billing.manage\",\"product.create\",\"inventory.update\",\"charge.manage\",\"staff.manage\",\"integration.view\",\"storefront.template.publish\",\"settlement.approve\",\"payment.reconcile\",\"ledger.post\",\"operations.view\",\"storefront.content.view\",\"merchant.delete\",\"report.finance.export\",\"audit.export\",\"monitoring.view\",\"notification.send\",\"charge.view\",\"payment.view\",\"billing.view\",\"customer.view\",\"media.view\",\"analytics.view\",\"storefront.navigation.manage\",\"merchant.create\",\"inventory.view\",\"store.view\",\"store.manage\",\"trace.view\",\"media.delete\",\"payment.refund\",\"operations.manage\",\"integration.manage\",\"storefront.template.manage\"],\"user_id\":\"20000000-0000-4000-8000-000000000001\"}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/rbac/me/permissions"
+      },
+      {
+        "body": "{\"enrolled\":true,\"grace_expires_at\":null,\"remaining_recovery_codes\":10,\"required\":true}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/mfa/status"
+      }
+    ]
+  },
+  {
+    "step": 10,
+    "description": "TOTP challenge passed (step 59717390) — AAL-2 session",
+    "screenshot": "10-console-aal2.png",
+    "api": [
+      {
+        "body": "{\"access_token\":\"eyJhbGciOiJSUzI1NiIsImtpZCI6ImxhYmhhLXJzYS0wMSIsInR5cCI6IkpXVCJ9.eyJhYWwiOjIsImF1ZCI6Imh0dHBzOi8vYXBpLmxhYmhhLmlvIiwiZGV2aWNlX2lkIjoiMzgzZTlmNTUtMGFkZS00ODdhLTlhMDUtZTU2YTJjYjYzYTI1IiwiZXhwIjoxNzkxNTIyNTgxLCJpYXQiOjE3OTE1MjE2ODEsImlzcyI6Imh0dHBzOi8vYXV0aC5sYWJoYS5pbyIsImp0aSI6Ijk2OGFmY2FiLTY0OTYtNDhjMy04MWM4LTE2YjFiMjY3YjVjOSIsIm1lcmNoYW50X2lkIjoiMjAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMDEwIiwicHJpbmNpcGFsX3R5cGUiOiJ1c2VyIiwicm9sZSI6IlJPT1RfQURNSU4iLCJzdG9yZV9zY29wZXMiOltdLCJzdWIiOiIyMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwMDEifQ.rQqKdU0yEy40V-cixNPImjKRcG-XFEn2l0JBGmiy12kTrwy_tJU-AcvGUb5NpU519Q_R2C19tup9e1hxYLrX1jKf8okAhGdQ5JAMTjwS8qf99YV0BgbhD7h3RUx_ya5IB9KmpFr2a8blTywsw7HIvT_Vjx-0bj3npvsmrcl_iGKuxVWUUlW1ZLKNkObMS2jv60QpJMqyLWThoB9PlaLwOE43nenv-ag7Faqvm5cpRAXrMz8BgD8ytpS9UPD-v12MW65-jrhXuWsMFp-FG01Jv_9vUWEog-Qy0Il2PXRXTneAKwLTcOcWmthQISmEOaOvyDyux0bBzb2_hqUvG56zHVxEcKolELeDxNttgYmCatBnFaA6Kdi2j64Kt-G0A954VouhuBagI9p2_hmlZ_fD0cWxsLQgUtvX3Dj61dyK-Hvu_wTNuK08etT8k3e3w0rrwM1v9luyMGjRa11b9MSRxsugqlDPGBOhVZEgAZk0pdIlJKqi857t33KJES8aR_2HRZJIaRdZFEg4iWf366IcWlIzEdGD5fhsQ27kwub233auEFNeWe9g9C5eZcEHORY3nB_eUt-t7u4mTu9Cm3Dp8Lc79Cd9p8na8vP79QMB-ufyGmvkjx2vgUt50lPmUOqZ3s-rLyyTd05f5bVCPsa35lKc3TeerlKkBuZAcxHlcNk\",\"expires_in\":899,\"token_type\":\"Bearer\"}",
+        "method": "POST",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/mfa/challenge"
+      },
+      {
+        "body": "{\"user_id\":\"20000000-0000-4000-8000-000000000001\",\"email\":\"root@labha.dev\",\"is_active\":true,\"is_email_verified\":true,\"is_phone_verified\":false,\"role_code\":\"ROOT_ADMIN\",\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"assurance_level\":2,\"session_jti\":\"968afcab-6496-48c3-81c8-16b1b267b5c9\",\"device_id\":\"383e9f55-0ade-487a-9a05-e56a2cb63a25\",\"stores_count\":5,\"has_products\":true,\"has_inventory\":false,\"onboarding_percent\":40,\"onboarding_phase\":\"PLAN\",\"onboarding_next\":\"store.subdomain\"}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/me"
+      },
+      {
+        "body": "{\"success\":true,\"data\":[],\"meta\":{\"page\":1,\"page_size\":8,\"total\":0,\"total_pages\":0}}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/notifications?page=1&page_size=8"
+      },
+      {
+        "body": "{\"success\":true,\"data\":null}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/charges/review-queue"
+      },
+      {
+        "body": "{\"success\":true,\"data\":[{\"id\":\"30000000-0000-4000-8000-000000000010\",\"owner_user_id\":\"30000000-0000-4000-8000-000000000001\",\"legal_name\":\"LABHA Super Admin Merchant\",\"kyc_status\":\"ACTIVE\",\"business_type\":\"private_limited\",\"primary_language\":\"en\",\"onboarding_step\":0,\"version\":0,\"created_at\":\"2026-10-08T20:00:28Z\",\"updated_at\":\"2026-10-08T20:00:28Z\",\"email\":\"admin@labha.dev\",\"phone\":\"+919999999999\"},{\"id\":\"20000000-0000-4000-8000-000000000010\",\"owner_user_id\":\"20000000-0000-4000-8000-000000000101\",\"legal_name\":\"LABHA Dev Merchant\",\"kyc_status\":\"ACTIVE\",\"business_type\":\"private_limited\",\"primary_language\":\"en\",\"onboarding_step\":0,\"version\":0,\"created_at\":\"2026-10-08T20:00:24Z\",\"updated_at\":\"2026-10-08T20:00:28Z\",\"email\":\"owner@labha.dev\"},{\"id\":\"a0000000-0000-4000-8000-000000000001\",\"legal_name\":\"LABHA Platform\",\"kyc_status\":\"ACTIVE\",\"business_type\":\"PLATFORM\",\"primary_language\":\"en\",\"onboarding_step\":0,\"version\":0,\"created_at\":\"2026-10-08T19:59:56Z\",\"updated_at\":\"2026-10-08T19:59:56Z\"}],\"meta\":{\"page\":1,\"page_size\":20,\"total\":3,\"total_pages\":1}}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/merchants?page=1&page_size=20"
+      }
+    ]
+  },
+  {
+    "step": 11,
+    "description": "AAL-2 session loads the recovery queue (no step-up dead-end)",
+    "screenshot": "11-recovery-queue-aal2.png",
+    "api": [
+      {
+        "body": "{\"requests\":[]}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/mfa/recovery/requests"
+      }
+    ]
+  },
+  {
+    "step": 12,
+    "description": "Restore: AAL-2 disable",
+    "api": [
+      {
+        "url": "/mfa/disable",
+        "method": "POST",
+        "status": 204,
+        "body": ""
+      }
+    ]
+  },
+  {
+    "step": 12.1,
+    "description": "State restored",
+    "api": [
+      {
+        "url": "/mfa/status",
+        "method": "GET",
+        "status": 200,
+        "body": "{\"error\":{\"code\":\"AUTH_RATE_LIMIT_EXCEEDED\",\"message\":\"Too many attempts. Please wait a while and try again.\"}}"
+      }
+    ]
+  }
+]

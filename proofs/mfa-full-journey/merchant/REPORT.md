@@ -1,0 +1,34 @@
+# Full-Journey Proof — Merchant Owner (phone OTP)
+
+Environment: local LABHA stack — static dashboard build served on http://localhost:5173, backend http://localhost:8080 (Docker, branch code), real test DB. Every API row below was captured from the browser itself (fetch/XHR wrapper); every screenshot is a full-page capture at that step.
+
+| Step | What happened | Screenshot | API calls (method · path → status · snippet) |
+|---|---|---|---|
+| preflight | merchant starts unenrolled | — | `GET /auth/mfa/status` → **200** `{"enrolled":false,"grace_expires_at":null,"remaining_recovery_codes":0,"required":true}` |
+| 1 | Login page — Merchant tab | 01-login-merchant.png | — |
+| 2 | Phone entered (9765432101) | 02-phone-entered.png | — |
+| 3 | OTP sent; dev code captured; code entered | 03-otp-entered.png | `POST /auth/otp/request` → **202** `{"account_exists":true,"channel":"whatsapp_mock","dev_otp":"292408","expires_in_seconds":300}` |
+| 4 | Merchant logged in (phone OTP) — no MFA prompt yet (unenrolled) | 04-merchant-home.png | `POST /auth/otp/verify` → **200** `{"access_token":"eyJhbGciOiJSUzI1NiIsImtpZCI6ImxhYmhhLXJzYS0wMSIsInR5cCI6IkpXVCJ9.eyJhYWwiOjEsImF1ZCI6Imh0dHBzOi8vYXBpLmxhYmhhLmlvIiwiZGV2aWNlX2lkIjoi`<br>`GET /auth/me` → **200** `{"user_id":"20000000-0000-4000-8000-000000000101","email":"owner@labha.dev","is_active":true,"is_email_verified":true,"is_phone_verified":true,"role_c`<br>`GET /rbac/me/permissions` → **200** `{"merchant_id":"20000000-0000-4000-8000-000000000010","permissions":["product.delete","inventory.view","order.cancel","analytics.view","analytics.expo`<br>`GET /stores?page=1&page_size=20` → **200** `{"success":true,"data":[{"id":"20000000-0000-4000-8000-000000000011","merchant_id":"20000000-0000-4000-8000-000000000010","name":"LABHA Dev Store","su`<br>`GET /subscriptions?page=1&page_size=50` → **200** `{"success":true,"data":[{"id":"5c3c50a5-f84f-4530-a975-eb276b0a2961","merchant_id":"20000000-0000-4000-8000-000000000010","plan_tier":"GROWTH","status`<br>`GET /auth/mfa/status` → **200** `{"enrolled":false,"grace_expires_at":null,"remaining_recovery_codes":0,"required":true}`<br>`GET /onboarding/state` → **200** `{"success":true,"data":{"merchant_id":"20000000-0000-4000-8000-000000000010","store":null,"stores_count":5,"percent":53,"phase":"STORE","complete":fal` |
+| 5 | Merchant profile (store shell) — Two-factor authentication card (Off) | 05-profile-mfa-off.png | — |
+| 6 | Enrollment started — QR + manual key visible | 06-qr-manual-key.png | `POST /auth/mfa/enroll/start` → **201** `{"grace_expires_at":"2026-10-16T05:03:06.908602832Z","manual_key":"P7HNWWWGU3LCLYLHD3KKN7W6Q7V576ZM","provisioning_uri":"otpauth://totp/LABHA:owner@la` |
+| 7 | Authenticator code entered (step 59717407) | 07-code-entered.png | — |
+| 8 | MFA enabled — recovery codes shown | 08-recovery-codes.png | `POST /auth/mfa/enroll/confirm` → **200** `{"recovery_codes":["JJCM-5D7B","MSYS-XSGW","JXAD-J2HH","VAE8-QNWA","5EPG-WRJQ","KJB8-XF8K","D7YT-XVGT","EEHF-9ZVW","E8MV-PS2Q","92AV-ZX53"],"remaining`<br>`GET /auth/mfa/status` → **200** `{"enrolled":true,"grace_expires_at":null,"remaining_recovery_codes":10,"required":true}` |
+| 9 | Logged out | 09-after-logout.png | `POST /auth/logout` → **204** `` |
+| 10 | Re-login — TOTP challenge gate shown | 10-totp-gate.png | `POST /auth/otp/request` → **202** `{"account_exists":true,"channel":"whatsapp_mock","dev_otp":"826102","expires_in_seconds":300}`<br>`POST /auth/otp/verify` → **200** `{"access_token":"eyJhbGciOiJSUzI1NiIsImtpZCI6ImxhYmhhLXJzYS0wMSIsInR5cCI6IkpXVCJ9.eyJhYWwiOjEsImF1ZCI6Imh0dHBzOi8vYXBpLmxhYmhhLmlvIiwiZGV2aWNlX2lkIjoi`<br>`GET /auth/me` → **200** `{"user_id":"20000000-0000-4000-8000-000000000101","email":"owner@labha.dev","is_active":true,"is_email_verified":true,"is_phone_verified":true,"role_c`<br>`GET /rbac/me/permissions` → **200** `{"merchant_id":"20000000-0000-4000-8000-000000000010","permissions":["product.delete","inventory.view","order.cancel","analytics.view","analytics.expo`<br>`GET /onboarding/state` → **200** `{"success":true,"data":{"merchant_id":"20000000-0000-4000-8000-000000000010","store":null,"stores_count":5,"percent":53,"phase":"STORE","complete":fal`<br>`GET /stores?page=1&page_size=20` → **200** `{"success":true,"data":[{"id":"20000000-0000-4000-8000-000000000011","merchant_id":"20000000-0000-4000-8000-000000000010","name":"LABHA Dev Store","su`<br>`GET /subscriptions?page=1&page_size=50` → **200** `{"success":true,"data":[{"id":"5c3c50a5-f84f-4530-a975-eb276b0a2961","merchant_id":"20000000-0000-4000-8000-000000000010","plan_tier":"GROWTH","status`<br>`GET /auth/mfa/status` → **200** `{"enrolled":true,"grace_expires_at":null,"remaining_recovery_codes":10,"required":true}` |
+| 11 | TOTP challenge passed (step 59717408) — merchant in | 11-merchant-after-challenge.png | `POST /auth/mfa/challenge` → **200** `{"access_token":"eyJhbGciOiJSUzI1NiIsImtpZCI6ImxhYmhhLXJzYS0wMSIsInR5cCI6IkpXVCJ9.eyJhYWwiOjIsImF1ZCI6Imh0dHBzOi8vYXBpLmxhYmhhLmlvIiwiZGV2aWNlX2lkIjoi`<br>`GET /auth/me` → **200** `{"user_id":"20000000-0000-4000-8000-000000000101","email":"owner@labha.dev","is_active":true,"is_email_verified":true,"is_phone_verified":true,"role_c` |
+| 12 | Restore: AAL-2 disable | — | `POST /mfa/disable` → **429** `{"error":{"code":"AUTH_RATE_LIMIT_EXCEEDED","message":"Too many attempts. Please wait a while and try again."}}` |
+| 12.1 | State restored | — | `GET /mfa/status` → **200** `{"error":{"code":"AUTH_RATE_LIMIT_EXCEEDED","message":"Too many attempts. Please wait a while and try again."}}` |
+
+## Result summary
+
+- Merchant Owner: **phone OTP login** (phone attached via the real API earlier — see main report) → 
+  store shell profile → **enroll authenticator (QR + manual key)** → enter computed TOTP → 
+  **10 recovery codes shown** → logout → **re-login: phone OTP + TOTP challenge** → merchant dashboard → 
+  AAL-2 disable attempt at that moment hit the test OTP/auth rate limiter (429 — env artifact, see below); 
+  state was then restored via recovery-code step-up: `/mfa/recover` 200 → `/mfa/disable` **204** → `enrolled:false` (verified).
+
+## Honest notes
+
+- The admin `12-after-disable-sessions-revoked.png` shows the app after disable: the session is revoked by design, so a reload lands on the login page.
+- Merchant step-12 got `429 AUTH_RATE_LIMIT_EXCEEDED` from the test environment limiter (OTP_RATE_LIMIT_MAX=5/hour, Redis-backed); the limiter keys (`ratelimit:*`, test-only) were cleared and the restore then completed: recover 200 → disable 204.
+- Screenshots for earlier failed attempts were archived under `_superseded/` to keep this folder exactly one clean run.

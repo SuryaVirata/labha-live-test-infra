@@ -1,0 +1,36 @@
+{
+  "href": "http://localhost:5173/login?next=%2Fstore%2Flabha-dev%2Fprofile",
+  "log": [
+    {
+      "body": "{\"grace_expires_at\":\"2026-10-16T05:01:28.243350255Z\",\"manual_key\":\"VEV7J6G5THFIMFLN46F3L75EMX4WM37C\",\"provisioning_uri\":\"otpauth://totp/LABHA:owner@labha.dev?digits=6\\u0026issuer=LABHA\\u0026period=30\\u0026secret=VEV7J6G5THFIMFLN46F3L75EMX4WM37C\"}",
+      "method": "POST",
+      "status": 201,
+      "url": "http://localhost:8080/api/v1/auth/mfa/enroll/start"
+    },
+    {
+      "body": "{\"recovery_codes\":[\"GPN2-ZM92\",\"UJ9T-VTQX\",\"W84U-KYPU\",\"52UM-34XD\",\"UF5Y-TWMU\",\"RDVT-4GKY\",\"REVZ-JEXJ\",\"P8A4-N9G3\",\"U3XY-22AZ\",\"XTGE-KU4T\"],\"remaining\":10}",
+      "method": "POST",
+      "status": 200,
+      "url": "http://localhost:8080/api/v1/auth/mfa/enroll/confirm"
+    },
+    {
+      "body": "{\"enrolled\":true,\"grace_expires_at\":null,\"remaining_recovery_codes\":10,\"required\":true}",
+      "method": "GET",
+      "status": 200,
+      "url": "http://localhost:8080/api/v1/auth/mfa/status"
+    },
+    {
+      "body": "",
+      "method": "POST",
+      "status": 204,
+      "url": "http://localhost:8080/api/v1/auth/logout"
+    },
+    {
+      "body": "{\"error\":{\"code\":\"AUTH_RATE_LIMIT_EXCEEDED\",\"message\":\"Too many attempts. Please wait a while and try again.\"}}",
+      "method": "POST",
+      "status": 429,
+      "url": "http://localhost:8080/api/v1/auth/otp/request"
+    }
+  ],
+  "text": "LABHA\nProfit from it.\n\nThe admin portal behind every store on Labha — sign in with your mobile number.\n\nOne login, every role\nMerchants sign in with a phone OTP — access is permission-driven from there.\nYour store, your colors\nEach merchant's admin portal re-themes itself to their own brand automatically.\nBuilt for the whole flow\nOnboarding, catalog, inventory, orders, and shipments — one connecte"
+}

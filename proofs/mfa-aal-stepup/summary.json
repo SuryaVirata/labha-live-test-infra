@@ -1,0 +1,33 @@
+{
+  "deviceId": "aal-ui-1791520328572",
+  "steps": {
+    "login_http_200": "PASS",
+    "login_mints_aal1": "PASS",
+    "login_device_matches": "PASS",
+    "queue_http_403": "PASS",
+    "queue_code_auth_aal_required": "PASS",
+    "explainer_seen": "PASS",
+    "generic_error_absent": "PASS",
+    "stayed_on_recovery_url": "PASS",
+    "verify_now_lands_on_login": "PASS",
+    "return_path_is_recovery_queue": "PASS",
+    "login_form_shown": "PASS"
+  },
+  "loginClaims": {
+    "aal": 1,
+    "role": "ROOT_ADMIN",
+    "device_id": "aal-ui-1791520328572"
+  },
+  "queueResponse": {
+    "status": 403,
+    "body": {
+      "error": {
+        "code": "AUTH_AAL_REQUIRED",
+        "required_permission": "step-up authentication required"
+      }
+    }
+  },
+  "pageUrl": "http://localhost:5173/console/mfa-recovery",
+  "afterVerifyNowUrl": "http://localhost:5173/login?next=%2Fconsole%2Fmfa-recovery",
+  "result": "ALL-PASS"
+}

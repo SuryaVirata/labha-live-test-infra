@@ -1,0 +1,243 @@
+[
+  {
+    "step": "preflight",
+    "description": "merchant starts unenrolled",
+    "api": [
+      {
+        "url": "/auth/mfa/status",
+        "method": "GET",
+        "status": 200,
+        "body": "{\"enrolled\":false,\"grace_expires_at\":null,\"remaining_recovery_codes\":0,\"required\":true}"
+      }
+    ]
+  },
+  {
+    "step": 1,
+    "description": "Login page — Merchant tab",
+    "screenshot": "01-login-merchant.png",
+    "api": []
+  },
+  {
+    "step": 2,
+    "description": "Phone entered (9765432101)",
+    "screenshot": "02-phone-entered.png",
+    "api": []
+  },
+  {
+    "step": 3,
+    "description": "OTP sent; dev code captured; code entered",
+    "screenshot": "03-otp-entered.png",
+    "api": [
+      {
+        "body": "{\"account_exists\":true,\"channel\":\"whatsapp_mock\",\"dev_otp\":\"292408\",\"expires_in_seconds\":300}",
+        "method": "POST",
+        "status": 202,
+        "url": "http://localhost:8080/api/v1/auth/otp/request"
+      }
+    ]
+  },
+  {
+    "step": 4,
+    "description": "Merchant logged in (phone OTP) — no MFA prompt yet (unenrolled)",
+    "screenshot": "04-merchant-home.png",
+    "api": [
+      {
+        "body": "{\"access_token\":\"eyJhbGciOiJSUzI1NiIsImtpZCI6ImxhYmhhLXJzYS0wMSIsInR5cCI6IkpXVCJ9.eyJhYWwiOjEsImF1ZCI6Imh0dHBzOi8vYXBpLmxhYmhhLmlvIiwiZGV2aWNlX2lkIjoiMGFiMWQ4MmUtNzA0OS00NTViLWFiYmMtODhhMDEwYzA2OGNmIiwiZXhwIjoxNzkxNTIzMDc3LCJpYXQiOjE3OTE1MjIxNzcsImlzcyI6Imh0dHBzOi8vYXV0aC5sYWJoYS5pbyIsImp0aSI6IjYwOGE3ZTk2LWEyZGEtNDc5Mi04YmYxLTU5ZjgyYjhlOTgzZSIsIm1lcmNoYW50X2lkIjoiMjAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMDEwIiwicHJpbmNpcGFsX3R5cGUiOiJ1c2VyIiwicm9sZSI6Ik1FUkNIQU5UX09XTkVSIiwic3RvcmVfc2NvcGVzIjpbXSwic3ViIjoiMjAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMTAxIn0.ViyXYoQmxOm052yzK-HUTxfY-m3giwjm3rRBS06lNPFCK08_0J8u1o7LYEh42YYfSQciQGyjhX1Ny4CXw8FNq0yo8EL6eWDwSulBTsAwqucisbwvSDx1SoIB2qO7EhEi4n7M9LlNM9LD7Ik_ExKh2vUCV3shCQZoaHGn11YSiOboM8zL4nz3TBDsmdmP6QXGUhz10xin9owhLlvqASY6d2donvcfPzmtvEbYMx4tzLjIs3QEEpTYgSChxVNwFBAsf14t6zi5xG7QP06-cyu12yAFhM_5hT4-Xaadqhkzzm1pCrFLS7Wamk7pf8c1BiSahsD8nro9c-yQ6k7gSjjFIfsMBOnMVNibJSt4d_wlkfbh8kigynMSXSvo6D1FJ8u_LH7uAhOixP9vgvdBD7LlhsDh0_ffUU4SVtouDOVYvwg79a5r7G7-Gsb9X1vRlxD5pLl_Te7R9CeAqTVWa_1RrnTcRxgFIWEAyUUQW5gQtEDAGfLpGY0PLDe3AKrMq3hd74E40pr6cU25C_Tf2fwZDW6amX7qOsxMAJq625qvoXcAa56DD61e-MZyY6Pic950qJekhnq04wPryf0fO9YjdAF1pe0hcA3qmcrh1uivCcQU9nMSHwe4CzOqDr4LUzjQur9Snii07lPILFWFiAbXoH8J2Nbi4R9uiem1XYwVJv8\",\"refresh_token\":\"ENnItqAo8WiFh4DK_S-_lHIyIkQgLmt7vdsb4SLLx_4\",\"expires_in\":899,\"token_type\":\"Bearer\"}",
+        "method": "POST",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/otp/verify"
+      },
+      {
+        "body": "{\"user_id\":\"20000000-0000-4000-8000-000000000101\",\"email\":\"owner@labha.dev\",\"is_active\":true,\"is_email_verified\":true,\"is_phone_verified\":true,\"role_code\":\"MERCHANT_OWNER\",\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"assurance_level\":1,\"session_jti\":\"608a7e96-a2da-4792-8bf1-59f82b8e983e\",\"device_id\":\"0ab1d82e-7049-455b-abbc-88a010c068cf\",\"stores_count\":5,\"has_products\":true,\"has_inventory\":false,\"onboarding_percent\":53,\"onboarding_phase\":\"STORE\",\"onboarding_next\":\"store.subdomain\"}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/me"
+      },
+      {
+        "body": "{\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"permissions\":[\"product.delete\",\"inventory.view\",\"order.cancel\",\"analytics.view\",\"analytics.export\",\"store.view\",\"integration.view\",\"storefront.template.view\",\"staff.manage\",\"product.view\",\"order.view\",\"shipment.create\",\"payment.refund\",\"revenue.view\",\"store.publish\",\"notification.send\",\"subscription.manage\",\"staff.invite\",\"billing.view\",\"notification.view\",\"customer.view\",\"customer.create\",\"ledger.view\",\"media.upload\",\"merchant.update\",\"product.create\",\"product.update\",\"order.fulfill\",\"discount.manage\",\"audit.export\",\"ledger.post\",\"integration.manage\",\"payment.view\",\"payment.create\",\"media.view\",\"operations.manage\",\"storefront.publish\",\"merchant.create\",\"shipping.manage\",\"audit.view\",\"notification.template.manage\",\"storefront.view\",\"storefront.content.view\",\"storefront.theme.manage\",\"merchant.view\",\"store.manage\",\"customer.update\",\"media.delete\",\"storefront.content.manage\",\"storefront.navigation.manage\",\"staff.revoke\",\"inventory.update\",\"billing.manage\",\"operations.view\",\"storefront.manage\"],\"user_id\":\"20000000-0000-4000-8000-000000000101\"}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/rbac/me/permissions"
+      },
+      {
+        "body": "{\"success\":true,\"data\":[{\"id\":\"20000000-0000-4000-8000-000000000011\",\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"name\":\"LABHA Dev Store\",\"subdomain\":\"labha-dev\",\"status\":\"ACTIVE\",\"is_active\":true,\"version\":0,\"created_at\":\"2026-10-08T20:00:28Z\",\"updated_at\":\"2026-10-08T20:00:28Z\",\"fulfilment_modes\":[\"PARCEL\"],\"fulfilment_configured_at\":null},{\"id\":\"5f3f2f8c-fb08-4e52-b813-670e90a8a15a\",\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"name\":\"Chekka Bhaskar SomaRaju Metals\",\"subdomain\":\"cbsr-metals\",\"status\":\"ACTIVE\",\"is_active\":true,\"version\":1,\"created_at\":\"2026-10-08T20:00:27Z\",\"updated_at\":\"2026-10-08T20:00:27Z\",\"city\":\"Ajjaram\",\"fulfilment_modes\":[\"PARCEL\"],\"fulfilment_configured_at\":null},{\"id\":\"0392ea98-06ef-4f46-a813-ca52ca5b6f71\",\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"name\":\"Sandhya Sarees\",\"subdomain\":\"sandhya-sarees\",\"status\":\"ACTIVE\",\"is_active\":true,\"version\":1,\"created_at\":\"2026-10-08T20:00:24Z\",\"updated_at\":\"2026-10-08T20:00:24Z\",\"fulfilment_modes\":[\"PARCEL\"],\"fulfilment_configured_at\":null},{\"id\":\"aae35429-9e98-4442-8e6d-d08f71a8df78\",\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"name\":\"Smoke Shack\",\"subdomain\":\"smoke-shack\",\"status\":\"ACTIVE\",\"is_active\":true,\"version\":1,\"created_at\":\"2026-10-08T20:00:24Z\",\"updated_at\":\"2026-10-08T20:00:24Z\",\"fulfilment_modes\":[\"PARCEL\"],\"fulfilment_configured_at\":null},{\"id\":\"f9421015-556f-4466-be0e-a72e5e514ef7\",\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"name\":\"Shanmita Jewels\",\"subdomain\":\"shanmita-jewels\",\"status\":\"ACTIVE\",\"is_active\":true,\"version\":1,\"created_at\":\"2026-10-08T20:00:24Z\",\"updated_at\":\"2026-10-08T20:00:24Z\",\"fulfilment_modes\":[\"PARCEL\"],\"fulfilment_configured_at\":null}],\"meta\":{\"page\":1,\"page_size\":20,\"total\":5,\"total_pages\":1}}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/stores?page=1&page_size=20"
+      },
+      {
+        "body": "{\"success\":true,\"data\":[{\"id\":\"5c3c50a5-f84f-4530-a975-eb276b0a2961\",\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"plan_tier\":\"GROWTH\",\"status\":\"ACTIVE\",\"billing_cycle\":\"monthly\",\"payment_provider\":\"test_fixture\",\"current_period_start\":\"2026-10-09T04:57:37Z\",\"current_period_end\":\"2026-11-08T04:57:37Z\",\"version\":0,\"created_at\":\"2026-10-09T04:57:37Z\",\"updated_at\":\"2026-10-09T04:57:37Z\"}],\"meta\":{\"page\":1,\"page_size\":50,\"total\":1,\"total_pages\":1}}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/subscriptions?page=1&page_size=50"
+      },
+      {
+        "body": "{\"enrolled\":false,\"grace_expires_at\":null,\"remaining_recovery_codes\":0,\"required\":true}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/mfa/status"
+      },
+      {
+        "body": "{\"success\":true,\"data\":{\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"store\":null,\"stores_count\":5,\"percent\":53,\"phase\":\"STORE\",\"complete\":false,\"next_action\":{\"milestone_key\":\"store.subdomain\",\"title\":\"Pick your store address\",\"href\":\"/dashboard?step=basics\",\"cta\":\"Set store address\"},\"blocking\":null,\"milestones\":[{\"key\":\"account.created\",\"title\":\"Create your LABHA account\",\"kind\":\"DERIVED\",\"scope\":\"MERCHANT\",\"phase\":\"NEW\",\"required\":true,\"done\":true,\"skipped\":false,\"href\":\"/app\",\"cta\":\"Open dashboard\",\"at\":\"2026-10-08T20:00:24.912294Z\"},{\"key\":\"business.details\",\"title\":\"Tell us about your business\",\"kind\":\"DERIVED\",\"scope\":\"MERCHANT\",\"phase\":\"ACCOUNT\",\"required\":true,\"done\":true,\"skipped\":false,\"href\":\"/dashboard?step=basics\",\"cta\":\"Add business details\"},{\"key\":\"business.registered_address\",\"title\":\"Add your registered address\",\"kind\":\"DERIVED\",\"scope\":\"MERCHANT\",\"phase\":\"ACCOUNT\",\"required\":false,\"done\":true,\"skipped\":false,\"href\":\"/dashboard\",\"cta\":\"Add address\"},{\"key\":\"business.kyc_identifiers\",\"title\":\"Add your GSTIN or PAN\",\"kind\":\"DERIVED\",\"scope\":\"MERCHANT\",\"phase\":\"ACCOUNT\",\"required\":false,\"done\":true,\"skipped\":false,\"href\":\"/dashboard\",\"cta\":\"Add GSTIN / PAN\"},{\"key\":\"business.documents_uploaded\",\"title\":\"Upload your KYC documents\",\"kind\":\"DERIVED\",\"scope\":\"MERCHANT\",\"phase\":\"ACCOUNT\",\"required\":false,\"done\":false,\"skipped\":false,\"href\":\"/dashboard\",\"cta\":\"Upload documents\"},{\"key\":\"business.kyc_approved\",\"title\":\"Get your KYC approved\",\"kind\":\"DERIVED\",\"scope\":\"MERCHANT\",\"phase\":\"ACCOUNT\",\"required\":false,\"done\":true,\"skipped\":false,\"href\":\"/dashboard\",\"cta\":\"Check KYC status\"},{\"key\":\"store.created\",\"title\":\"Create your store\",\"kind\":\"DERIVED\",\"scope\":\"MERCHANT\",\"phase\":\"STORE\",\"required\":true,\"done\":true,\"skipped\":false,\"href\":\"/dashboard?step=basics\",\"cta\":\"Create store\"},{\"key\":\"store.subdomain\",\"title\":\"Pick your store address\",\"kind\":\"DERIVED\",\"scope\":\"STORE\",\"phase\":\"STORE\",\"required\":true,\"done\":false,\"skipped\":false,\"href\":\"/dashboard?step=basics\",\"cta\":\"Set store address\"},{\"key\":\"plan.selected\",\"title\":\"Choose a plan\",\"kind\":\"DERIVED\",\"scope\":\"MERCHANT\",\"phase\":\"PLAN\",\"required\":true,\"done\":true,\"skipped\":false,\"href\":\"/onboarding/plan\",\"cta\":\"See plans\"},{\"key\":\"plan.paid\",\"title\":\"Pay for your plan\",\"kind\":\"DERIVED\",\"scope\":\"MERCHANT\",\"phase\":\"PLAN\",\"required\":true,\"done\":true,\"skipped\":false,\"href\":\"/onboarding/plan\",\"cta\":\"Complete payment\"},{\"key\":\"builder.template_selected\",\"title\":\"Choose a template\",\"kind\":\"DERIVED\",\"scope\":\"STORE\",\"phase\":\"BUILDING\",\"required\":true,\"done\":false,\"skipped\":false,\"href\":\"/dashboard?step=template\",\"cta\":\"Pick a template\"},{\"key\":\"builder.logo_uploaded\",\"title\":\"Upload your logo\",\"kind\":\"DERIVED\",\"scope\":\"STORE\",\"phase\":\"BUILDING\",\"required\":true,\"done\":false,\"skipped\":false,\"href\":\"/dashboard?step=basics\",\"cta\":\"Upload logo\"},{\"key\":\"builder.theme_colours_set\",\"title\":\"Make the colours yours\",\"kind\":\"DERIVED\",\"scope\":\"STORE\",\"phase\":\"BUILDING\",\"required\":false,\"done\":false,\"skipped\":false,\"href\":\"/dashboard?step=colors\",\"cta\":\"Edit colours\"},{\"key\":\"builder.header_configured\",\"title\":\"Set up your menu\",\"kind\":\"DERIVED\",\"scope\":\"STORE\",\"phase\":\"BUILDING\",\"required\":false,\"done\":false,\"skipped\":false,\"href\":\"/dashboard?step=chrome\",\"cta\":\"Edit header\"},{\"key\":\"builder.footer_configured\",\"title\":\"Set up your footer\",\"kind\":\"DERIVED\",\"scope\":\"STORE\",\"phase\":\"BUILDING\",\"required\":false,\"done\":false,\"skipped\":false,\"href\":\"/dashboard?step=chrome\",\"cta\":\"Edit footer\"},{\"key\":\"builder.pages_edited\",\"title\":\"Write your own page copy\",\"kind\":\"DERIVED\",\"scope\":\"STORE\",\"phase\":\"BUILDING\",\"required\":false,\"done\":false,\"skipped\":false,\"href\":\"/dashboard?step=pages\",\"cta\":\"Edit pages\"},{\"key\":\"builder.policies_done\",\"title\":\"Publish your policies\",\"kind\":\"DERIVED\",\"scope\":\"STORE\",\"phase\":\"BUILDING\",\"required\":false,\"done\":false,\"skipped\":false,\"href\":\"/dashboard?step=pages\",\"cta\":\"Edit policies\"},{\"key\":\"catalog.categories_created\",\"title\":\"Create your categories\",\"kin",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/onboarding/state"
+      }
+    ]
+  },
+  {
+    "step": 5,
+    "description": "Merchant profile (store shell) — Two-factor authentication card (Off)",
+    "screenshot": "05-profile-mfa-off.png",
+    "api": []
+  },
+  {
+    "step": 6,
+    "description": "Enrollment started — QR + manual key visible",
+    "screenshot": "06-qr-manual-key.png",
+    "api": [
+      {
+        "body": "{\"grace_expires_at\":\"2026-10-16T05:03:06.908602832Z\",\"manual_key\":\"P7HNWWWGU3LCLYLHD3KKN7W6Q7V576ZM\",\"provisioning_uri\":\"otpauth://totp/LABHA:owner@labha.dev?digits=6\\u0026issuer=LABHA\\u0026period=30\\u0026secret=P7HNWWWGU3LCLYLHD3KKN7W6Q7V576ZM\"}",
+        "method": "POST",
+        "status": 201,
+        "url": "http://localhost:8080/api/v1/auth/mfa/enroll/start"
+      }
+    ]
+  },
+  {
+    "step": 7,
+    "description": "Authenticator code entered (step 59717407)",
+    "screenshot": "07-code-entered.png",
+    "api": []
+  },
+  {
+    "step": 8,
+    "description": "MFA enabled — recovery codes shown",
+    "screenshot": "08-recovery-codes.png",
+    "api": [
+      {
+        "body": "{\"recovery_codes\":[\"JJCM-5D7B\",\"MSYS-XSGW\",\"JXAD-J2HH\",\"VAE8-QNWA\",\"5EPG-WRJQ\",\"KJB8-XF8K\",\"D7YT-XVGT\",\"EEHF-9ZVW\",\"E8MV-PS2Q\",\"92AV-ZX53\"],\"remaining\":10}",
+        "method": "POST",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/mfa/enroll/confirm"
+      },
+      {
+        "body": "{\"enrolled\":true,\"grace_expires_at\":null,\"remaining_recovery_codes\":10,\"required\":true}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/mfa/status"
+      }
+    ]
+  },
+  {
+    "step": 9,
+    "description": "Logged out",
+    "screenshot": "09-after-logout.png",
+    "api": [
+      {
+        "body": "",
+        "method": "POST",
+        "status": 204,
+        "url": "http://localhost:8080/api/v1/auth/logout"
+      }
+    ]
+  },
+  {
+    "step": 10,
+    "description": "Re-login — TOTP challenge gate shown",
+    "screenshot": "10-totp-gate.png",
+    "api": [
+      {
+        "body": "{\"account_exists\":true,\"channel\":\"whatsapp_mock\",\"dev_otp\":\"826102\",\"expires_in_seconds\":300}",
+        "method": "POST",
+        "status": 202,
+        "url": "http://localhost:8080/api/v1/auth/otp/request"
+      },
+      {
+        "body": "{\"access_token\":\"eyJhbGciOiJSUzI1NiIsImtpZCI6ImxhYmhhLXJzYS0wMSIsInR5cCI6IkpXVCJ9.eyJhYWwiOjEsImF1ZCI6Imh0dHBzOi8vYXBpLmxhYmhhLmlvIiwiZGV2aWNlX2lkIjoiMGFiMWQ4MmUtNzA0OS00NTViLWFiYmMtODhhMDEwYzA2OGNmIiwiZXhwIjoxNzkxNTIzMTE5LCJpYXQiOjE3OTE1MjIyMTksImlzcyI6Imh0dHBzOi8vYXV0aC5sYWJoYS5pbyIsImp0aSI6ImI4ZDU4MGJkLTk0MGMtNGZjMy1iNTQyLTdhOTVhZDk3NjI0ZSIsIm1lcmNoYW50X2lkIjoiMjAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMDEwIiwicHJpbmNpcGFsX3R5cGUiOiJ1c2VyIiwicm9sZSI6Ik1FUkNIQU5UX09XTkVSIiwic3RvcmVfc2NvcGVzIjpbXSwic3ViIjoiMjAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMTAxIn0.bk5Xb9VhkHYUQpiToPNtJ9K_S0Tw38TFzvzrJKpI5lrIEofQ9oJnxPlkoHTCCj_TM49q5bmoN0wASC8va1WTkKzhftnZ4Z5tqp9YgXyR4X1c8zK_YqCPM0Bob_JJ3P2QJE-IvVPfzNaE1Jy8E-Ye_ttIHYzMkVPqzJeFTOgCHtasi0934qNYBZVDSoP9JxpDMbCAvi0iLBA6xgBSARJ0sUXQi1U6L5Agqk2fRARrXXkH_RoYrBLxpWkoHjUxTVz8gbXk_V6yoOjebMGkhfhD0Rgdj0KcetYiKfubfl_1LIDqiQNSwOMjprtHIOLDRZ_MpemhHlygGstJ50kuYEAUS_gRb022ZrnafviNzNRrVpq6SYr6N69hGWDu3CtA6BWiimPT554WyEXOaxfeGfxcou_VpIUF9ByZ5rjqC3cM37YEk7O6o6PTYzbdPsQID1G1jT8orkye-Iu3MnJ4ezANoTl8RthAC-JrxDIB5yvf9aTUBWlkMLTncIC_qXZp1dR3KTwI4qG4kM_Vqiu2TS377qnW_ZMJRs9BUEQ8Gr9TrcvEoQmTihcgD0H45NqM3jltSMEnpN1zTRCEoRJQmYeJkSqgPRO2-fkaVdgWX4h4w7Fb7htrWElqzb9vCq4yl8CEOfQPiTesPRHJ6L9y10Fr8LUL4YMuGxqOD3y9JtdWpCA\",\"refresh_token\":\"Q85tpj1LbOEiBG7llSCIl0soluYCc_4q_YDL-6lrM5w\",\"expires_in\":899,\"token_type\":\"Bearer\"}",
+        "method": "POST",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/otp/verify"
+      },
+      {
+        "body": "{\"user_id\":\"20000000-0000-4000-8000-000000000101\",\"email\":\"owner@labha.dev\",\"is_active\":true,\"is_email_verified\":true,\"is_phone_verified\":true,\"role_code\":\"MERCHANT_OWNER\",\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"assurance_level\":1,\"session_jti\":\"b8d580bd-940c-4fc3-b542-7a95ad97624e\",\"device_id\":\"0ab1d82e-7049-455b-abbc-88a010c068cf\",\"stores_count\":5,\"has_products\":true,\"has_inventory\":false,\"onboarding_percent\":53,\"onboarding_phase\":\"STORE\",\"onboarding_next\":\"store.subdomain\"}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/me"
+      },
+      {
+        "body": "{\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"permissions\":[\"product.delete\",\"inventory.view\",\"order.cancel\",\"analytics.view\",\"analytics.export\",\"store.view\",\"integration.view\",\"storefront.template.view\",\"staff.manage\",\"product.view\",\"order.view\",\"shipment.create\",\"payment.refund\",\"revenue.view\",\"store.publish\",\"notification.send\",\"subscription.manage\",\"staff.invite\",\"billing.view\",\"notification.view\",\"customer.view\",\"customer.create\",\"ledger.view\",\"media.upload\",\"merchant.update\",\"product.create\",\"product.update\",\"order.fulfill\",\"discount.manage\",\"audit.export\",\"ledger.post\",\"integration.manage\",\"payment.view\",\"payment.create\",\"media.view\",\"operations.manage\",\"storefront.publish\",\"merchant.create\",\"shipping.manage\",\"audit.view\",\"notification.template.manage\",\"storefront.view\",\"storefront.content.view\",\"storefront.theme.manage\",\"merchant.view\",\"store.manage\",\"customer.update\",\"media.delete\",\"storefront.content.manage\",\"storefront.navigation.manage\",\"staff.revoke\",\"inventory.update\",\"billing.manage\",\"operations.view\",\"storefront.manage\"],\"user_id\":\"20000000-0000-4000-8000-000000000101\"}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/rbac/me/permissions"
+      },
+      {
+        "body": "{\"success\":true,\"data\":{\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"store\":null,\"stores_count\":5,\"percent\":53,\"phase\":\"STORE\",\"complete\":false,\"next_action\":{\"milestone_key\":\"store.subdomain\",\"title\":\"Pick your store address\",\"href\":\"/dashboard?step=basics\",\"cta\":\"Set store address\"},\"blocking\":null,\"milestones\":[{\"key\":\"account.created\",\"title\":\"Create your LABHA account\",\"kind\":\"DERIVED\",\"scope\":\"MERCHANT\",\"phase\":\"NEW\",\"required\":true,\"done\":true,\"skipped\":false,\"href\":\"/app\",\"cta\":\"Open dashboard\",\"at\":\"2026-10-08T20:00:24.912294Z\"},{\"key\":\"business.details\",\"title\":\"Tell us about your business\",\"kind\":\"DERIVED\",\"scope\":\"MERCHANT\",\"phase\":\"ACCOUNT\",\"required\":true,\"done\":true,\"skipped\":false,\"href\":\"/dashboard?step=basics\",\"cta\":\"Add business details\"},{\"key\":\"business.registered_address\",\"title\":\"Add your registered address\",\"kind\":\"DERIVED\",\"scope\":\"MERCHANT\",\"phase\":\"ACCOUNT\",\"required\":false,\"done\":true,\"skipped\":false,\"href\":\"/dashboard\",\"cta\":\"Add address\"},{\"key\":\"business.kyc_identifiers\",\"title\":\"Add your GSTIN or PAN\",\"kind\":\"DERIVED\",\"scope\":\"MERCHANT\",\"phase\":\"ACCOUNT\",\"required\":false,\"done\":true,\"skipped\":false,\"href\":\"/dashboard\",\"cta\":\"Add GSTIN / PAN\"},{\"key\":\"business.documents_uploaded\",\"title\":\"Upload your KYC documents\",\"kind\":\"DERIVED\",\"scope\":\"MERCHANT\",\"phase\":\"ACCOUNT\",\"required\":false,\"done\":false,\"skipped\":false,\"href\":\"/dashboard\",\"cta\":\"Upload documents\"},{\"key\":\"business.kyc_approved\",\"title\":\"Get your KYC approved\",\"kind\":\"DERIVED\",\"scope\":\"MERCHANT\",\"phase\":\"ACCOUNT\",\"required\":false,\"done\":true,\"skipped\":false,\"href\":\"/dashboard\",\"cta\":\"Check KYC status\"},{\"key\":\"store.created\",\"title\":\"Create your store\",\"kind\":\"DERIVED\",\"scope\":\"MERCHANT\",\"phase\":\"STORE\",\"required\":true,\"done\":true,\"skipped\":false,\"href\":\"/dashboard?step=basics\",\"cta\":\"Create store\"},{\"key\":\"store.subdomain\",\"title\":\"Pick your store address\",\"kind\":\"DERIVED\",\"scope\":\"STORE\",\"phase\":\"STORE\",\"required\":true,\"done\":false,\"skipped\":false,\"href\":\"/dashboard?step=basics\",\"cta\":\"Set store address\"},{\"key\":\"plan.selected\",\"title\":\"Choose a plan\",\"kind\":\"DERIVED\",\"scope\":\"MERCHANT\",\"phase\":\"PLAN\",\"required\":true,\"done\":true,\"skipped\":false,\"href\":\"/onboarding/plan\",\"cta\":\"See plans\"},{\"key\":\"plan.paid\",\"title\":\"Pay for your plan\",\"kind\":\"DERIVED\",\"scope\":\"MERCHANT\",\"phase\":\"PLAN\",\"required\":true,\"done\":true,\"skipped\":false,\"href\":\"/onboarding/plan\",\"cta\":\"Complete payment\"},{\"key\":\"builder.template_selected\",\"title\":\"Choose a template\",\"kind\":\"DERIVED\",\"scope\":\"STORE\",\"phase\":\"BUILDING\",\"required\":true,\"done\":false,\"skipped\":false,\"href\":\"/dashboard?step=template\",\"cta\":\"Pick a template\"},{\"key\":\"builder.logo_uploaded\",\"title\":\"Upload your logo\",\"kind\":\"DERIVED\",\"scope\":\"STORE\",\"phase\":\"BUILDING\",\"required\":true,\"done\":false,\"skipped\":false,\"href\":\"/dashboard?step=basics\",\"cta\":\"Upload logo\"},{\"key\":\"builder.theme_colours_set\",\"title\":\"Make the colours yours\",\"kind\":\"DERIVED\",\"scope\":\"STORE\",\"phase\":\"BUILDING\",\"required\":false,\"done\":false,\"skipped\":false,\"href\":\"/dashboard?step=colors\",\"cta\":\"Edit colours\"},{\"key\":\"builder.header_configured\",\"title\":\"Set up your menu\",\"kind\":\"DERIVED\",\"scope\":\"STORE\",\"phase\":\"BUILDING\",\"required\":false,\"done\":false,\"skipped\":false,\"href\":\"/dashboard?step=chrome\",\"cta\":\"Edit header\"},{\"key\":\"builder.footer_configured\",\"title\":\"Set up your footer\",\"kind\":\"DERIVED\",\"scope\":\"STORE\",\"phase\":\"BUILDING\",\"required\":false,\"done\":false,\"skipped\":false,\"href\":\"/dashboard?step=chrome\",\"cta\":\"Edit footer\"},{\"key\":\"builder.pages_edited\",\"title\":\"Write your own page copy\",\"kind\":\"DERIVED\",\"scope\":\"STORE\",\"phase\":\"BUILDING\",\"required\":false,\"done\":false,\"skipped\":false,\"href\":\"/dashboard?step=pages\",\"cta\":\"Edit pages\"},{\"key\":\"builder.policies_done\",\"title\":\"Publish your policies\",\"kind\":\"DERIVED\",\"scope\":\"STORE\",\"phase\":\"BUILDING\",\"required\":false,\"done\":false,\"skipped\":false,\"href\":\"/dashboard?step=pages\",\"cta\":\"Edit policies\"},{\"key\":\"catalog.categories_created\",\"title\":\"Create your categories\",\"kin",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/onboarding/state"
+      },
+      {
+        "body": "{\"success\":true,\"data\":[{\"id\":\"20000000-0000-4000-8000-000000000011\",\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"name\":\"LABHA Dev Store\",\"subdomain\":\"labha-dev\",\"status\":\"ACTIVE\",\"is_active\":true,\"version\":0,\"created_at\":\"2026-10-08T20:00:28Z\",\"updated_at\":\"2026-10-08T20:00:28Z\",\"fulfilment_modes\":[\"PARCEL\"],\"fulfilment_configured_at\":null},{\"id\":\"5f3f2f8c-fb08-4e52-b813-670e90a8a15a\",\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"name\":\"Chekka Bhaskar SomaRaju Metals\",\"subdomain\":\"cbsr-metals\",\"status\":\"ACTIVE\",\"is_active\":true,\"version\":1,\"created_at\":\"2026-10-08T20:00:27Z\",\"updated_at\":\"2026-10-08T20:00:27Z\",\"city\":\"Ajjaram\",\"fulfilment_modes\":[\"PARCEL\"],\"fulfilment_configured_at\":null},{\"id\":\"0392ea98-06ef-4f46-a813-ca52ca5b6f71\",\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"name\":\"Sandhya Sarees\",\"subdomain\":\"sandhya-sarees\",\"status\":\"ACTIVE\",\"is_active\":true,\"version\":1,\"created_at\":\"2026-10-08T20:00:24Z\",\"updated_at\":\"2026-10-08T20:00:24Z\",\"fulfilment_modes\":[\"PARCEL\"],\"fulfilment_configured_at\":null},{\"id\":\"aae35429-9e98-4442-8e6d-d08f71a8df78\",\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"name\":\"Smoke Shack\",\"subdomain\":\"smoke-shack\",\"status\":\"ACTIVE\",\"is_active\":true,\"version\":1,\"created_at\":\"2026-10-08T20:00:24Z\",\"updated_at\":\"2026-10-08T20:00:24Z\",\"fulfilment_modes\":[\"PARCEL\"],\"fulfilment_configured_at\":null},{\"id\":\"f9421015-556f-4466-be0e-a72e5e514ef7\",\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"name\":\"Shanmita Jewels\",\"subdomain\":\"shanmita-jewels\",\"status\":\"ACTIVE\",\"is_active\":true,\"version\":1,\"created_at\":\"2026-10-08T20:00:24Z\",\"updated_at\":\"2026-10-08T20:00:24Z\",\"fulfilment_modes\":[\"PARCEL\"],\"fulfilment_configured_at\":null}],\"meta\":{\"page\":1,\"page_size\":20,\"total\":5,\"total_pages\":1}}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/stores?page=1&page_size=20"
+      },
+      {
+        "body": "{\"success\":true,\"data\":[{\"id\":\"5c3c50a5-f84f-4530-a975-eb276b0a2961\",\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"plan_tier\":\"GROWTH\",\"status\":\"ACTIVE\",\"billing_cycle\":\"monthly\",\"payment_provider\":\"test_fixture\",\"current_period_start\":\"2026-10-09T04:57:37Z\",\"current_period_end\":\"2026-11-08T04:57:37Z\",\"version\":0,\"created_at\":\"2026-10-09T04:57:37Z\",\"updated_at\":\"2026-10-09T04:57:37Z\"}],\"meta\":{\"page\":1,\"page_size\":50,\"total\":1,\"total_pages\":1}}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/subscriptions?page=1&page_size=50"
+      },
+      {
+        "body": "{\"enrolled\":true,\"grace_expires_at\":null,\"remaining_recovery_codes\":10,\"required\":true}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/mfa/status"
+      }
+    ]
+  },
+  {
+    "step": 11,
+    "description": "TOTP challenge passed (step 59717408) — merchant in",
+    "screenshot": "11-merchant-after-challenge.png",
+    "api": [
+      {
+        "body": "{\"access_token\":\"eyJhbGciOiJSUzI1NiIsImtpZCI6ImxhYmhhLXJzYS0wMSIsInR5cCI6IkpXVCJ9.eyJhYWwiOjIsImF1ZCI6Imh0dHBzOi8vYXBpLmxhYmhhLmlvIiwiZGV2aWNlX2lkIjoiMGFiMWQ4MmUtNzA0OS00NTViLWFiYmMtODhhMDEwYzA2OGNmIiwiZXhwIjoxNzkxNTIzMTIwLCJpYXQiOjE3OTE1MjIyMjAsImlzcyI6Imh0dHBzOi8vYXV0aC5sYWJoYS5pbyIsImp0aSI6ImI4ZDU4MGJkLTk0MGMtNGZjMy1iNTQyLTdhOTVhZDk3NjI0ZSIsIm1lcmNoYW50X2lkIjoiMjAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMDEwIiwicHJpbmNpcGFsX3R5cGUiOiJ1c2VyIiwicm9sZSI6Ik1FUkNIQU5UX09XTkVSIiwic3RvcmVfc2NvcGVzIjpbXSwic3ViIjoiMjAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMTAxIn0.FUQVxdAAFULXgr8F5GlnkNT4APvA_sMMGqolZsnXiJof2NTzqVB4n9uIxqLu4KvIW8ao5Dx6vFrJvefk8ls0l6rmhkdzaPAidnjc3xZR0WFy-tXblz_YKqqkFHKkU76awkQsK-b30bkKCJ2U74WXRessMk4ubCbaAflNAYmmt64EGq_SyjrH8YOle_4hDkw7aFpRD2d1YDVY7lUjeFsZ3J8b2jVpG0xqVq5pFTAuI7f9PfVnsf5z117cvMfbvnjI_0ruYeNMVTgpWGBpiVkNVHSl71x1QJb_XuHrrBCL4rvw_PI5w6TV-NsRF_IqetSQq-t1eqvB397SZQgAdBOeDTzdqujGHsulEeQojY7t1zGNIHsc7DXT7vSTOw-IQVCMtJjABWHzFwch0V8SN8ssq2n4D5zpV8y4XFB1VOHhr0wQbl_fPCwnrjmTlNaIzYtw76zEe7h1OuZxzAtVdzphk5aYUi0QSNWVMuNeLQFD_GLMrGLo9oyzsS1rp4z-u1kW7U3BGAkNbHoAkIIrmEN2OZ1HT0y_qrlkNUZj0YC74MSvSxr2lXU9U_3ap4T87AnfbiGIEVFuypHB_A7sThG71gQEni8PoAPBMeGo_-jdedWMpCg0CKuk6NZIvVFenKM8PRghJxfMkvt86wTgi4MDqD9-03yeEyW4YtWWxV_FAO0\",\"expires_in\":899,\"token_type\":\"Bearer\"}",
+        "method": "POST",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/mfa/challenge"
+      },
+      {
+        "body": "{\"user_id\":\"20000000-0000-4000-8000-000000000101\",\"email\":\"owner@labha.dev\",\"is_active\":true,\"is_email_verified\":true,\"is_phone_verified\":true,\"role_code\":\"MERCHANT_OWNER\",\"merchant_id\":\"20000000-0000-4000-8000-000000000010\",\"assurance_level\":2,\"session_jti\":\"b8d580bd-940c-4fc3-b542-7a95ad97624e\",\"device_id\":\"0ab1d82e-7049-455b-abbc-88a010c068cf\",\"stores_count\":5,\"has_products\":true,\"has_inventory\":false,\"onboarding_percent\":53,\"onboarding_phase\":\"STORE\",\"onboarding_next\":\"store.subdomain\"}",
+        "method": "GET",
+        "status": 200,
+        "url": "http://localhost:8080/api/v1/auth/me"
+      }
+    ]
+  },
+  {
+    "step": 12,
+    "description": "Restore: AAL-2 disable",
+    "api": [
+      {
+        "url": "/mfa/disable",
+        "method": "POST",
+        "status": 429,
+        "body": "{\"error\":{\"code\":\"AUTH_RATE_LIMIT_EXCEEDED\",\"message\":\"Too many attempts. Please wait a while and try again.\"}}"
+      }
+    ]
+  },
+  {
+    "step": 12.1,
+    "description": "State restored",
+    "api": [
+      {
+        "url": "/mfa/status",
+        "method": "GET",
+        "status": 200,
+        "body": "{\"error\":{\"code\":\"AUTH_RATE_LIMIT_EXCEEDED\",\"message\":\"Too many attempts. Please wait a while and try again.\"}}"
+      }
+    ]
+  }
+]

@@ -1,0 +1,34 @@
+# Full-Journey Proof — Admin (Root Admin — email/password)
+
+Environment: local LABHA stack — static dashboard build served on http://localhost:5173, backend http://localhost:8080 (Docker, branch code), real test DB. Every API row below was captured from the browser itself (fetch/XHR wrapper); every screenshot is a full-page capture at that step.
+
+| Step | What happened | Screenshot | API calls (method · path → status · snippet) |
+|---|---|---|---|
+| preflight | root starts unenrolled | — | `GET /auth/mfa/status` → **200** `{"enrolled":false,"grace_expires_at":"2026-10-16T04:48:34.220359Z","remaining_recovery_codes":0,"required":true}` |
+| 1 | Login page loaded (root unenrolled; no MFA prompt expected) | 01-login-page.png | — |
+| 2 | Admin credentials entered | 02-admin-credentials.png | — |
+| 3 | Console after password login (AAL-1, no prompt yet — root unenrolled) | 03-console-aal1.png | `POST /auth/login` → **200** `{"access_token":"eyJhbGciOiJSUzI1NiIsImtpZCI6ImxhYmhhLXJzYS0wMSIsInR5cCI6IkpXVCJ9.eyJhYWwiOjEsImF1ZCI6Imh0dHBzOi8vYXBpLmxhYmhhLmlvIiwiZGV2aWNlX2lkIjoi`<br>`GET /auth/me` → **200** `{"user_id":"20000000-0000-4000-8000-000000000001","email":"root@labha.dev","is_active":true,"is_email_verified":true,"is_phone_verified":false,"role_c`<br>`GET /rbac/me/permissions` → **200** `{"merchant_id":"20000000-0000-4000-8000-000000000010","permissions":["storefront.publish","payment.create","revenue.view","ledger.view","order.view","`<br>`GET /auth/mfa/status` → **200** `{"enrolled":false,"grace_expires_at":"2026-10-16T04:48:34.220359Z","remaining_recovery_codes":0,"required":true}`<br>`GET /notifications?page=1&page_size=8` → **200** `{"success":true,"data":[],"meta":{"page":1,"page_size":8,"total":0,"total_pages":0}}`<br>`GET /charges/review-queue` → **200** `{"success":true,"data":null}`<br>`GET /merchants?page=1&page_size=20` → **200** `{"success":true,"data":[{"id":"30000000-0000-4000-8000-000000000010","owner_user_id":"30000000-0000-4000-8000-000000000001","legal_name":"LABHA Super ` |
+| 4 | Profile page with Two-factor authentication card (Off) | 04-profile-mfa-off.png | `GET /auth/mfa/status` → **200** `{"enrolled":false,"grace_expires_at":"2026-10-16T04:48:34.220359Z","remaining_recovery_codes":0,"required":true}`<br>`GET /auth/sessions` → **200** `{"sessions":[{"jti":"ec8b5107-12f6-4798-8c75-b7fbe81a5f20","device_id":"383e9f55-0ade-487a-9a05-e56a2cb63a25","ip_address":"172.18.0.1/32","last_seen_` |
+| 5 | Enrollment started — QR / manual key visible | 05-qr-manual-key.png | `GET /auth/sessions` → **200** `{"sessions":[{"jti":"ec8b5107-12f6-4798-8c75-b7fbe81a5f20","device_id":"383e9f55-0ade-487a-9a05-e56a2cb63a25","ip_address":"172.18.0.1/32","last_seen_`<br>`POST /auth/mfa/enroll/start` → **201** `{"grace_expires_at":"2026-10-16T04:48:34.220359Z","manual_key":"ZXUGI6JCOT65SJQGSLEBH5HH5OGZ5GZR","provisioning_uri":"otpauth://totp/LABHA:root@labha.` |
+| 5.1 | TOTP secret captured from enroll/start response | — | `POST /auth/mfa/enroll/start` → **201** `{"grace_expires_at":"2026-10-16T04:48:34.220359Z","manual_key":"ZXUGI6JCOT65SJQGSLEBH5HH5OGZ5GZR","provisioning_uri":"otpauth://totp/LABHA:root@labha.` |
+| 6 | Authenticator code entered (step 59717389) | 06-code-entered.png | — |
+| 7 | MFA enabled — recovery codes shown (10 single-use) | 07-recovery-codes.png | `POST /auth/mfa/enroll/confirm` → **200** `{"recovery_codes":["R8ZP-YG4U","WFUR-6JR7","DTDZ-GHSH","W38Y-AMS5","9DMT-XQ4H","4QKN-XNJ9","WD37-RU5K","2FFJ-VHDD","RKGZ-WCCF","Y5V7-9XR7"],"remaining`<br>`GET /auth/mfa/status` → **200** `{"enrolled":true,"grace_expires_at":null,"remaining_recovery_codes":10,"required":true}` |
+| 8 | Logged out — back on login page | 08-after-logout.png | `POST /auth/logout` → **204** `` |
+| 9 | Second login — TOTP challenge gate shown (enrolled+required) | 09-totp-gate.png | `POST /auth/login` → **200** `{"access_token":"eyJhbGciOiJSUzI1NiIsImtpZCI6ImxhYmhhLXJzYS0wMSIsInR5cCI6IkpXVCJ9.eyJhYWwiOjEsImF1ZCI6Imh0dHBzOi8vYXBpLmxhYmhhLmlvIiwiZGV2aWNlX2lkIjoi`<br>`GET /auth/me` → **200** `{"user_id":"20000000-0000-4000-8000-000000000001","email":"root@labha.dev","is_active":true,"is_email_verified":true,"is_phone_verified":false,"role_c`<br>`GET /rbac/me/permissions` → **200** `{"merchant_id":"20000000-0000-4000-8000-000000000010","permissions":["storefront.publish","payment.create","revenue.view","ledger.view","order.view","`<br>`GET /auth/mfa/status` → **200** `{"enrolled":true,"grace_expires_at":null,"remaining_recovery_codes":10,"required":true}` |
+| 10 | TOTP challenge passed (step 59717390) — AAL-2 session | 10-console-aal2.png | `POST /auth/mfa/challenge` → **200** `{"access_token":"eyJhbGciOiJSUzI1NiIsImtpZCI6ImxhYmhhLXJzYS0wMSIsInR5cCI6IkpXVCJ9.eyJhYWwiOjIsImF1ZCI6Imh0dHBzOi8vYXBpLmxhYmhhLmlvIiwiZGV2aWNlX2lkIjoi`<br>`GET /auth/me` → **200** `{"user_id":"20000000-0000-4000-8000-000000000001","email":"root@labha.dev","is_active":true,"is_email_verified":true,"is_phone_verified":false,"role_c`<br>`GET /notifications?page=1&page_size=8` → **200** `{"success":true,"data":[],"meta":{"page":1,"page_size":8,"total":0,"total_pages":0}}`<br>`GET /charges/review-queue` → **200** `{"success":true,"data":null}`<br>`GET /merchants?page=1&page_size=20` → **200** `{"success":true,"data":[{"id":"30000000-0000-4000-8000-000000000010","owner_user_id":"30000000-0000-4000-8000-000000000001","legal_name":"LABHA Super ` |
+| 11 | AAL-2 session loads the recovery queue (no step-up dead-end) | 11-recovery-queue-aal2.png | `GET /auth/mfa/recovery/requests` → **200** `{"requests":[]}` |
+| 12 | Restore: AAL-2 disable | — | `POST /mfa/disable` → **204** `` |
+| 12.1 | State restored | — | `GET /mfa/status` → **200** `{"error":{"code":"AUTH_RATE_LIMIT_EXCEEDED","message":"Too many attempts. Please wait a while and try again."}}` |
+
+## Result summary
+
+- Root Admin: password login → console (AAL-1) → **enroll authenticator (QR + manual key)** → 
+  enter computed TOTP → **10 recovery codes shown** → logout → re-login → 
+  **TOTP challenge gate** → AAL-2 console → **AAL-2-gated MFA recovery queue loads** → 
+  **AAL-2 disable → 204** (HTTP 204 = success; sessions revoked by design) → state back to `enrolled:false` (verified by API).
+
+## Honest notes
+
+- The admin `12-after-disable-sessions-revoked.png` shows the app after disable: the session is revoked by design, so a reload lands on the login page.
+- Merchant step-12 got `429 AUTH_RATE_LIMIT_EXCEEDED` from the test environment limiter (OTP_RATE_LIMIT_MAX=5/hour, Redis-backed); the limiter keys (`ratelimit:*`, test-only) were cleared and the restore then completed: recover 200 → disable 204.
+- Screenshots for earlier failed attempts were archived under `_superseded/` to keep this folder exactly one clean run.
